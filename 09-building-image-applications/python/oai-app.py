@@ -44,12 +44,19 @@ try:
 # catch exceptions
 except client.error.InvalidRequestError as err:
     print(err)
-
 # ---creating variation below---
 
-
 response = client.images.create_variation(
-  image=open(image_path, "rb"),
-  n=1,
-  size="1024x1024"
+    image=open(image_path, "rb"),
+    n=1,
+    size="1024x1024"
 )
+
+variation_url = response.data[0].url
+variation_path = os.path.join(image_dir, 'variation-image.png')
+variation_image = requests.get(variation_url).content
+with open(variation_path, "wb") as image_file:
+    image_file.write(variation_image)
+
+image = Image.open(variation_path)
+image.show()
